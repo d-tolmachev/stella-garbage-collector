@@ -68,13 +68,13 @@ namespace stella {
 
         static bool points_to(stella_object* p, std::byte* space) noexcept;
 
-        void collect() noexcept;
+        void collect();
 
-        void incremental_forward() noexcept;
+        void incremental_forward();
 
-        stella_object* forward(stella_object* p) noexcept;
+        stella_object* forward(stella_object* p);
 
-        void chase(stella_object* p) noexcept;
+        void chase(stella_object* p);
     };
 
 }

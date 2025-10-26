@@ -143,8 +143,8 @@ void print_stella_object(stella_object* obj) {
 void print_stella_stats() {
   #ifdef STELLA_GC_STATS
   printf("\n------------------------------------------------------------\n");
-  printf("Garbage collector (GC) state:\n");
-
+  printf("Garbage collector (GC) statistics:\n");
+  print_gc_alloc_stats();
 #endif
   #ifdef STELLA_RUNTIME_STATS
   printf("\n------------------------------------------------------------\n");

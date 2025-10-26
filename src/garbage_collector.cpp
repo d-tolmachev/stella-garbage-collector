@@ -185,7 +185,7 @@ namespace stella {
         return static_cast<std::byte*>(static_cast<void*>(p)) >= space && static_cast<std::byte*>(static_cast<void*>(p)) < space + REGION_SIZE;
     }
 
-    void garbage_collector::collect() noexcept {
+    void garbage_collector::collect() {
         current_allocated_bytes_cnt_ = 0;
         current_allocated_objects_cnt_ = 0;
         ++total_cycles_cnt_;
@@ -198,7 +198,7 @@ namespace stella {
         }
     }
 
-    void garbage_collector::incremental_forward() noexcept {
+    void garbage_collector::incremental_forward() {
         size_t forwarded_records = 0;
         while (scan_ < next_ && forwarded_records < RECORDS_TO_FORWARD) {
             stella_object* object = static_cast<stella_object*>(static_cast<void*>(scan_));
@@ -210,7 +210,7 @@ namespace stella {
         }
     }
 
-    stella_object* garbage_collector::forward(stella_object* p) noexcept {
+    stella_object* garbage_collector::forward(stella_object* p) {
         if (points_to(p, to_space_)) {
             if (points_to(static_cast<stella_object*>(p->object_fields[0]), from_space_)) {
                 return static_cast<stella_object*>(p->object_fields[0]);
@@ -223,8 +223,11 @@ namespace stella {
         }
     }
 
-    void garbage_collector::chase(stella_object* p) noexcept {
+    void garbage_collector::chase(stella_object* p) {
         do {
+            if (next_ + sizeof(stella_object) + static_cast<size_t>(STELLA_OBJECT_HEADER_FIELD_COUNT(p->object_header)) * sizeof(void*) >= limit_) {
+                throw std::bad_alloc();
+            }
             current_allocated_bytes_cnt_ += sizeof(stella_object) + static_cast<size_t>(STELLA_OBJECT_HEADER_FIELD_COUNT(p->object_header)) * sizeof(void*);
             ++current_allocated_objects_cnt_;
             stella_object* q = static_cast<stella_object*>(static_cast<void*>(next_));
