@@ -186,6 +186,9 @@ namespace stella {
     }
 
     void garbage_collector::collect() {
+        while (scan_ < next_) {
+            incremental_forward();
+        }
         current_allocated_bytes_cnt_ = 0;
         current_allocated_objects_cnt_ = 0;
         ++total_cycles_cnt_;
