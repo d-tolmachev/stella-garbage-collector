@@ -69,10 +69,10 @@ namespace stella {
     }
 
     void* garbage_collector::allocate(size_t size) {
-        advance_scan(size);
         if (next_ >= limit_ - size) {
             collect();
         }
+        advance_scan(size);
         if (next_ >= limit_ - size) {
             throw std::bad_alloc();
         }
@@ -120,21 +120,23 @@ namespace stella {
         std::cout << "Heap state:" << std::endl;
         std::cout << "From-space: " << REGION_SIZE << " bytes at " << std::hex << std::showbase << static_cast<void*>(from_space_) << std::noshowbase << std::dec << std::endl;
         std::cout << "To-space: " << REGION_SIZE << " bytes at " << std::hex << std::showbase << static_cast<void*>(to_space_) << std::noshowbase << std::dec << std::endl;
+        std::cout << std::hex << std::showbase;
         stella_object* object = static_cast<stella_object*>(static_cast<void*>(to_space_));
         while (static_cast<std::byte*>(static_cast<void*>(object)) < next_) {
-            std::cout << "Stella object at " << std::hex << std::showbase << static_cast<void*>(object) << std::noshowbase << std::dec << ": ";
+            std::cout << "Stella object at " << static_cast<void*>(object) << ": ";
             print_stella_object(object);
             std::cout << std::endl;
             object = static_cast<stella_object*>(static_cast<void*>(static_cast<std::byte*>(static_cast<void*>(object)) + sizeof(stella_object) + static_cast<size_t>(STELLA_OBJECT_HEADER_FIELD_COUNT(object->object_header)) * sizeof(void*)));
         }
         object = static_cast<stella_object*>(static_cast<void*>(limit_));
         while (static_cast<std::byte*>(static_cast<void*>(object)) < to_space_ + REGION_SIZE) {
-            std::cout << "Stella object at " << std::hex << std::showbase << static_cast<void*>(object) << std::noshowbase << std::dec << ": ";
+            std::cout << "Stella object at " << static_cast<void*>(object) << ": ";
             print_stella_object(object);
             std::cout << std::endl;
             object = static_cast<stella_object*>(static_cast<void*>(static_cast<std::byte*>(static_cast<void*>(object)) + sizeof(stella_object) + static_cast<size_t>(STELLA_OBJECT_HEADER_FIELD_COUNT(object->object_header)) * sizeof(void*)));
         }
-        std::cout << "GC variable values: " << std::hex << std::showbase << "scan = " << static_cast<void*>(scan_) << ", next = " << static_cast<void*>(next_) << ", limit = " << static_cast<void*>(limit_) << std::noshowbase << std::dec << std::endl;
+        std::cout << "GC variable values: scan = " << static_cast<void*>(scan_) << ", next = " << static_cast<void*>(next_) << ", limit = " << static_cast<void*>(limit_) << std::endl;
+        std::cout << std::noshowbase << std::dec;
         print_roots();
         std::cout << "Current memory allocation: " << current_allocated_bytes_cnt_ << " bytes (" << current_allocated_objects_cnt_ << " objects)" << std::endl;
         std::cout << "Current memory available: " << (limit_ - next_) << " bytes" << std::endl;
@@ -144,7 +146,7 @@ namespace stella {
         std::cout << std::hex << std::showbase;
         std::cout << "Set of roots:" << std::endl;
         for (void** root : roots_) {
-            std::cout << "Stella object at " << std::hex << std::showbase << static_cast<void*>(*root) << std::noshowbase << std::dec << ": ";
+            std::cout << "Stella object at " << *root << ": ";
             print_stella_object(static_cast<stella_object*>(*root));
             std::cout << std::endl;
         }
@@ -218,7 +220,7 @@ namespace stella {
     }
 
     stella_object* garbage_collector::chase(stella_object* p) {
-        do {
+        while (p) {
             if (next_ + sizeof(stella_object) + static_cast<size_t>(STELLA_OBJECT_HEADER_FIELD_COUNT(p->object_header)) * sizeof(void*) >= limit_) {
                 throw std::bad_alloc();
             }
@@ -241,7 +243,7 @@ namespace stella {
             }
             p->object_fields[0] = static_cast<void*>(q);
             p = r;
-        } while (p);
+        }
         return nullptr;
     }
 
