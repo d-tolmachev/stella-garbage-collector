@@ -143,7 +143,9 @@ namespace stella {
     void garbage_collector::print_roots() const noexcept {
         std::cout << std::hex << std::showbase;
         std::cout << "Set of roots:" << std::endl;
+        std::cout << std::endl;
         for (void** root : roots_) {
+            std::cout << "Stella object at " << std::hex << std::showbase << static_cast<void*>(*root) << std::noshowbase << std::dec << ": ";
             print_stella_object(static_cast<stella_object*>(*root));
             std::cout << std::endl;
         }
