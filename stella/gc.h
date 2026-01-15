@@ -16,53 +16,23 @@
  * If necessary, this should start/continue garbage collection.
  * Returns a pointer to the newly allocated object.
  */
-#ifdef __cplusplus
-extern "C" {
-#endif
 void* gc_alloc(size_t size_in_bytes);
-#ifdef __cplusplus
-}
-#endif
 
 /** GC-specific code which must be executed on each READ operation.
  */
-#ifdef __cplusplus
-extern "C" {
-#endif
 void gc_read_barrier(void *object, int field_index);
-#ifdef __cplusplus
-}
-#endif
 /** GC-specific code which must be executed on each WRITE operation
  * (except object field initialization).
  */
-#ifdef __cplusplus
-extern "C" {
-#endif
 void gc_write_barrier(void *object, int field_index, void *contents);
-#ifdef __cplusplus
-}
-#endif
 
 /** Push a reference to a root (variable) on the GC's stack of roots.
  */
-#ifdef __cplusplus
-extern "C" {
-#endif
 void gc_push_root(void **object);
-#ifdef __cplusplus
-}
-#endif
 /** Pop a reference to a root (variable) on the GC's stack of roots.
  * The argument must be at the top of the stack.
  */
-#ifdef __cplusplus
-extern "C" {
-#endif
 void gc_pop_root(void **object);
-#ifdef __cplusplus
-}
-#endif
 
 /** Print GC statistics. Output must include at least:
  *
@@ -72,13 +42,7 @@ void gc_pop_root(void **object);
  * 4. Number of read/write barrier triggers.
  * 5. Total number of GC cycles (for each generation, if applicable).
  */
-#ifdef __cplusplus
-extern "C" {
-#endif
 void print_gc_alloc_stats();
-#ifdef __cplusplus
-}
-#endif
 
 /** Print GC state. Output must include at least:
  *
@@ -87,23 +51,11 @@ void print_gc_alloc_stats();
  * 3. Current allocated memory (bytes and objects).
  * 4. GC variable values (e.g. scan/next/limit variables in a copying collector).
  */
-#ifdef __cplusplus
-extern "C" {
-#endif
 void print_gc_state();
-#ifdef __cplusplus
-}
-#endif
 
 /** Print current GC roots (addresses).
  * May be useful for debugging.
  */
-#ifdef __cplusplus
-extern "C" {
-#endif
 void print_gc_roots();
-#ifdef __cplusplus
-}
-#endif
 
 #endif

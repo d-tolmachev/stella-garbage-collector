@@ -67,55 +67,19 @@ enum TAG {
 /** Allocate a new Stella object with a given TAG and number of fields.
  * Note that this function makes use of gc_alloc.
  */
-#ifdef __cplusplus
-extern "C" {
-#endif
 stella_object* alloc_stella_object(enum TAG tag, int fields_count);
-#ifdef __cplusplus
-}
-#endif
 
 /** Convert a natural number (non-negative integer) into a corresponding Stella object. */
-#ifdef __cplusplus
-extern "C" {
-#endif
 stella_object *nat_to_stella_object(int n);
-#ifdef __cplusplus
-}
-#endif
 /** Convert a natural number represented as a Stella object to an integer. */
-#ifdef __cplusplus
-extern "C" {
-#endif
 int stella_object_to_nat(stella_object* obj);
-#ifdef __cplusplus
-}
-#endif
 /** Pretty-print a Stella object. */
-#ifdef __cplusplus
-extern "C" {
-#endif
 void print_stella_object(stella_object* obj);
-#ifdef __cplusplus
-}
-#endif
 /** Print some Stella runtime statistics. */
-#ifdef __cplusplus
-extern "C" {
-#endif
 void print_stella_stats();
-#ifdef __cplusplus
-}
-#endif
 
 /** Builtin implementation for Stella's Nat::rec. */
-#ifdef __cplusplus
-extern "C" {
-#endif
 stella_object* stella_object_nat_rec(stella_object* n, stella_object* z, stella_object* f);
-#ifdef __cplusplus
-}
-#endif
 
 /** The static Stella object for zero. */
 extern stella_object the_ZERO;

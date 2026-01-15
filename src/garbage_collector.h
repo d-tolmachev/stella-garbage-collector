@@ -4,7 +4,7 @@
 #include <deque>
 #include <memory>
 
-#include "runtime.h"
+#include "runtime_interface.h"
 
 namespace stella {
 
@@ -46,7 +46,6 @@ namespace stella {
 
     private:
         constexpr static size_t REGION_SIZE = MAX_ALLOC_SIZE - MAX_ALLOC_SIZE % alignof(stella_object);
-        constexpr static size_t RECORDS_TO_FORWARD = 16;
         std::unique_ptr<std::byte[]> heap_;
         std::deque<void**> roots_;
         std::byte* from_space_;
@@ -70,11 +69,11 @@ namespace stella {
 
         void collect();
 
-        void incremental_forward();
+        void advance_scan(size_t size);
 
-        stella_object* forward(stella_object* p);
+        stella_object* forward(stella_object* p, bool read_barrier = false);
 
-        void chase(stella_object* p);
+        stella_object* chase(stella_object* p);
     };
 
 }

@@ -145,7 +145,7 @@ void print_stella_stats() {
   printf("\n------------------------------------------------------------\n");
   printf("Garbage collector (GC) statistics:\n");
   print_gc_alloc_stats();
-#endif
+  #endif
   #ifdef STELLA_RUNTIME_STATS
   printf("\n------------------------------------------------------------\n");
   printf("Stella runtime statistics:\n");
